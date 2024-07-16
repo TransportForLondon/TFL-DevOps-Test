@@ -25,4 +25,4 @@ jobs:
         resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
         template: ./Infrastructure/database.bicep
         parameters: Infrastructure/database.parameters.json adminPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
-        failOnStdError: false
+        failOnStdErr: false
