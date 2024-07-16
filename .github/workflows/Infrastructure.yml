@@ -26,3 +26,12 @@ jobs:
         template: ./Infrastructure/database.bicep
         parameters: Infrastructure/database.parameters.json adminPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
         failOnStdErr: false
+
+    - name: Deploy API
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ env.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        template: ./Infrastructure/api.bicep
+        parameters: Infrastructure/api.parameters.json
+        failOnStdErr: false
