@@ -22,12 +22,6 @@ jobs:
       run: az bicep install
 
     - name: Deploy Database
-      run: |
-        az deployment group create \
-        --name DatabaseDeployment \
-        --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
-        --template-file ./Infrastructure/database.bicep \
-        --parameters @./Infrastructure/database.parameters.json \
-        --parameters adminPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
+      run: az deployment group create --name DatabaseDeployment --resource-group ${{ env.RESOURCE_GROUP_NAME }} --template-file ./Infrastructure/database.bicep --parameters @./Infrastructure/database.parameters.json --parameters adminPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
       env:
         AZURE_SUBSCRIPTION_ID: ${{ env.SUBSCRIPTION_ID }}
