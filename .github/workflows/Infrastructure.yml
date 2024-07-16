@@ -18,10 +18,11 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Install Bicep
-      run: az bicep install
-
     - name: Deploy Database
-      run: az deployment group create --name DatabaseDeployment --resource-group ${{ env.RESOURCE_GROUP_NAME }} --template-file ${{ env.GITHUB_WORKSPACE }}\Infrastructure\database.bicep --parameters ${{ env.GITHUB_WORKSPACE}}\Infrastructure\database.parameters.json --parameters adminPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
-      env:
-        AZURE_SUBSCRIPTION_ID: ${{ env.SUBSCRIPTION_ID }}
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ env.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+        template: ./Infrastructure/database.bicep
+        parameters: Infrastructure/database.parameters.json adminPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
+        failOnStdError: false
