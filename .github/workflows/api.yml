@@ -43,13 +43,13 @@ jobs:
         run: dotnet build ./Api/Api.csproj --configuration Release
 
       - name: Publish Api
-        run: dotnet publish ./Api/Api.csproj --configuration Release --output ${{ env.DOTNET_ROOT }}/Api
+        run: dotnet publish ./Api/Api.csproj --configuration Release --output ./Publish/Api
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.AZURE_WEBAPP_NAME }}
-          path: ${{ env.DOTNET_ROOT }}/Api
+          path: ./Publish/Api
 
   Deploy:
     runs-on: windows-latest
