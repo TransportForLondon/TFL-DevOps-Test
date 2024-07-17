@@ -43,7 +43,7 @@ jobs:
         run: dotnet build ./Api/Api.csproj --configuration Release
 
       - name: Publish Api
-        run: dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}/Api
+        run: dotnet publish ./Api/Api.csproj --configuration Release --output ${{ env.DOTNET_ROOT }}/Api
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
