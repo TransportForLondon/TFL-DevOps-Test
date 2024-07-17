@@ -53,6 +53,7 @@ jobs:
 
   Deploy:
     runs-on: windows-latest
+    needs: Build
     environment:
       name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
