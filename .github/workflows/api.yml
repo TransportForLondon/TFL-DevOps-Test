@@ -35,7 +35,7 @@ jobs:
       - name: Replace Config Tokens
         uses: cschleiden/replace-tokens@v1
         with:
-          files: '[**/appsettings.json]'
+          files: '["**/appsettings.json"]'
         env:
           SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
 
