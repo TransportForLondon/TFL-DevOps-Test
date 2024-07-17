@@ -35,12 +35,12 @@ jobs:
       - name: Replace Config Tokens
         uses: cschleiden/replace-tokens@v1
         with:
-          files: '["**/appsettings.json"]'
+          files: '["Api/appsettings.json"]'
         env:
           SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
 
       - name: Build api
-        run: dotnet build **/api.csproj --configuration Release
+        run: dotnet build ./Api/Api.csproj --configuration Release
 
       - name: Publish Api
         run: dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}/Api
