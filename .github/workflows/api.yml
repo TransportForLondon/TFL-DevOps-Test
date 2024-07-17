@@ -1,0 +1,79 @@
+name: Build and Deploy API
+
+on:
+  push:
+    branches: 
+      - main
+    paths: 
+      - 'Api/**'
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: 8
+  DOTNET_ROOT: .
+  AZURE_WEBAPP_NAME: TflSchoolApi
+
+jobs:
+  Build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Replace Config Tokens
+        uses: cschleiden/replace-tokens@v1
+        with:
+          files: '[**/appsettings.json]'
+        env:
+          SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
+
+      - name: Build api
+        run: dotnet build **/api.csproj --configuration Release
+
+      - name: Publish Api
+        run: dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}/Api
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.AZURE_WEBAPP_NAME }}
+          path: ${{ env.DOTNET_ROOT }}/Api
+
+  Deploy:
+    runs-on: windows-latest
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.AZURE_WEBAPP_NAME }}
+
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ${{ env.DOTNET_ROOT }}
+
+      - name: Azure Logout
+        run: az logout
