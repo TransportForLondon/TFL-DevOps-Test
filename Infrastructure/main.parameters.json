@@ -8,9 +8,6 @@
        "apiServiceName": {
         "value": "tflSchool"
        },
-       "applicationInsightsDashboardName": {
-        "value": "tflSchool"
-       },
        "applicationInsightsName": {
         "value": "tflSchool"
        },

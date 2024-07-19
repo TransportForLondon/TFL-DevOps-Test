@@ -1,5 +1,5 @@
 param applicationInsightsName string
-param applicationInsightsDashboardName string
+//param applicationInsightsDashboardName string
 param location string
 param tags object = {}
 
@@ -9,7 +9,7 @@ module applicationInsights 'applicationInsights.bicep' = {
     name: applicationInsightsName
     location: location
     tags: tags
-    dashboardName: applicationInsightsDashboardName
+    //dashboardName: applicationInsightsDashboardName
   }
 }
 

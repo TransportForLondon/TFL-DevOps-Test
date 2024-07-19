@@ -8,7 +8,7 @@ param environmentName string
 param location string
 
 param apiServiceName string = ''
-param applicationInsightsDashboardName string = ''
+//param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
 param appServicePlanName string = ''
 param keyVaultName string = ''
@@ -108,7 +108,7 @@ module monitoring 'core/monitoring/monitoring.bicep' = {
     location: location
     tags: tags
     applicationInsightsName: 'appi-${applicationInsightsName}-${resourceToken}'
-    applicationInsightsDashboardName: 'dash-${applicationInsightsDashboardName}-${resourceToken}'
+    //applicationInsightsDashboardName: 'dash-${applicationInsightsDashboardName}-${resourceToken}'
   }
 }
 

@@ -1,5 +1,5 @@
 param name string
-param dashboardName string
+//param dashboardName string
 param location string
 param tags object = {}
 
