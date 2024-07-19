@@ -13,14 +13,14 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-module applicationInsightDashboard 'applicationInsights-dashboard.bicep' = {
+/* module applicationInsightDashboard 'applicationInsights-dashboard.bicep' = {
   name: 'application-insight-dashboard'
   params: {
     name: dashboardName
     location: location
     applicationInsightsName: applicationInsights.name
   }
-}
+} */
 
 output connectionString string = applicationInsights.properties.ConnectionString
 output instrumentationKey string = applicationInsights.properties.InstrumentationKey
