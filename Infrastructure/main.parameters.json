@@ -6,22 +6,22 @@
         "value": "North Europe"
        },
        "apiServiceName": {
-        "value": "tflSchool"
+        "value": "tfls"
        },
        "applicationInsightsName": {
-        "value": "tflSchool"
+        "value": "tfls"
        },
        "appServicePlanName": {
-        "value": "tflSchool"
+        "value": "tfls"
        },
        "keyVaultName": {
-        "value": "tflSchool"
+        "value": "tfls"
        },
        "sqlServerName": {
-        "value": "tflSchool"
+        "value": "tfls"
        },
        "sqlDatabaseName": {
-        "value": "tflSchool"
+        "value": "tfls"
        },
        "studentPortalServiceName": {
         "value": "studentPortal"
