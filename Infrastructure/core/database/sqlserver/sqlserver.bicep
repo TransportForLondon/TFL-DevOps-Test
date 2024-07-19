@@ -84,7 +84,7 @@ resource sqlDeploymentScript 'Microsoft.Resources/deploymentScripts@2023-08-01' 
     cat <<SCRIPT_END > ./initDb.sql
     drop user ${APPUSERNAME}
     go
-    create user ${APPUSERNAME} with password = '${APPUSERPASSWORD}
+    create user ${APPUSERNAME} with password = '${APPUSERPASSWORD}'
     go
     alter role db_owner add member ${APPUSERNAME}
     go
