@@ -14,7 +14,7 @@ env:
 
 jobs:
   infra:
-    runs-on: ubun-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     
