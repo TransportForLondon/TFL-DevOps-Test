@@ -72,10 +72,10 @@ jobs:
               key_id: keyId,
             });
 
-            const message = Buffer.from(process.env.APP_INSIGHTS_CONN_STRING);
-            const cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
+            message = Buffer.from(process.env.APP_INSIGHTS_CONN_STRING);
+            cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
             sodium.crypto_box_seal(cipherText, message, key);
-            const encryptedToken = cipherText.toString('base64')
+            encryptedToken = cipherText.toString('base64')
             await github.rest.actions.createOrUpdateRepoSecret({
               ...context.repo,
               secret_name: 'APP_INSIGHTS_CONN_STRING',
@@ -83,10 +83,10 @@ jobs:
               key_id: keyId,
             });
 
-            const message = Buffer.from(process.env.API_NAME);
-            const cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
+            message = Buffer.from(process.env.API_NAME);
+            cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
             sodium.crypto_box_seal(cipherText, message, key);
-            const encryptedToken = cipherText.toString('base64')
+            encryptedToken = cipherText.toString('base64')
             await github.rest.actions.createOrUpdateRepoSecret({
               ...context.repo,
               secret_name: 'API_NAME',
@@ -94,10 +94,10 @@ jobs:
               key_id: keyId,
             });
 
-            const message = Buffer.from(process.env.STUDENTPORTAL_NAME);
-            const cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
+            message = Buffer.from(process.env.STUDENTPORTAL_NAME);
+            cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
             sodium.crypto_box_seal(cipherText, message, key);
-            const encryptedToken = cipherText.toString('base64')
+            encryptedToken = cipherText.toString('base64')
             await github.rest.actions.createOrUpdateRepoSecret({
               ...context.repo,
               secret_name: 'STUDENTPORTAL_NAME',
