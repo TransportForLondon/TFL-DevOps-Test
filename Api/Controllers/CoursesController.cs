@@ -25,7 +25,15 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
         {
-            return await _context.Courses.ToListAsync();
+            try
+            {
+                var courses = await _context.Courses.ToListAsync();
+                return courses;
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // GET: api/Courses/5
