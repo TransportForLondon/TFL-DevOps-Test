@@ -64,7 +64,7 @@ resource appService 'Microsoft.Web/sites@2023-12-01' = {
   identity: { type: managedIdentity ? 'SystemAssigned' : 'None' }
 
   resource configAppSettings 'config' = {
-    name: 'appSettings'
+    name: 'appsettings'
     properties: union(appSettings,
       {
         SCM_DO_BUILD_DURING_DEPLOYMENT: string(scmDoBuildDuringDeploymentBool)
