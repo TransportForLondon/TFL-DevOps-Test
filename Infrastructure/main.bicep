@@ -121,3 +121,5 @@ output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
 output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
 output AZURE_LOCATION string = location
 output AZURE_TENANTID string = tenant().tenantId
+output AZURE_API_NAME string = schoolApi.outputs.SERVICE_API_NAME
+output AZURE_PORTAL_NAME string = studentPortal.outputs.SERVICE_WEB_NAME

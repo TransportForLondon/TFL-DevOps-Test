@@ -11,12 +11,21 @@ on:
 env:
   RESOURCE_GROUP_NAME: DevOps-Demo-Test
   SUBSCRIPTION_ID: 3065ef51-6e69-4ee9-a407-b2cc275f91d6
+  GITHUB_TOKEN: ${{ secrets.GHPAT_TOKEN || github.token }}
 
 jobs:
   prod:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    - run: |
+        npm install --global sodium-native@4.04
+        echo "NODE_ATH=$(npm root -g)" >> $GITHUB_ENV
     
     - name: Setup Azure CLI
       uses: azure/login@v1
@@ -24,6 +33,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy Template
+      id: deploy-template
       uses: azure/arm-deploy@v1
       with:
         scope: resourcegroup
@@ -34,3 +44,66 @@ jobs:
         deploymentName: 'school-infra-deployment'
         parameters: Infrastructure/main.parameters.json environmentName=prod sqlAdminPassword=${{ secrets.SQL_ADMIN_PASSWORD }} appUserPassword=${{ secrets.APP_USER_PASSWORD }}
         failOnStdErr: false
+    
+    - name: Update Secrets
+      uses: actions/github-script@v6
+      env:
+        DATABASE_CONN_STRING: ${{ steps.deploy-template.outputs.AZURE_SQL_CONNECTION_STRING_KEY }}
+        APP_INSIGHTS_CONN_STRING: ${{ steps.deploy-template.outputs.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+        API_NAME: ${{ steps.deploy-template.outputs.AZURE_API_NAME }}
+        STUDENTPORTAL_NAME: ${{ steps.deploy-template.outputs.AZURE_PORTAL_NAME }}
+      with:
+        result-encoding: string
+        github-token: ${{ env.GITHUB_TOKEN }}
+        script: |
+          const sodium = require('sodium-native');
+          const { data: {key: publicKey, key_id: keyId}} = await github.rest.actions.getRepoPublicKey({...context.repo});
+          if (publicKey) {
+            const key = Buffer.from(publicKey, 'base64');
+            
+            const message = Buffer.from(process.env.DATABASE_CONN_STRING);
+            const cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
+            sodium.crypto_box_seal(cipherText, message, key);
+            const encryptedToken = cipherText.toString('base64')
+            await github.rest.actions.createOrUpdateRepoSecret({
+              ...context.repo,
+              secret_name: 'DATABASE_CONN_STRING',
+              encrypted_value: encryptedToken,
+              key_id: keyId,
+            });
+
+            const message = Buffer.from(process.env.APP_INSIGHTS_CONN_STRING);
+            const cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
+            sodium.crypto_box_seal(cipherText, message, key);
+            const encryptedToken = cipherText.toString('base64')
+            await github.rest.actions.createOrUpdateRepoSecret({
+              ...context.repo,
+              secret_name: 'APP_INSIGHTS_CONN_STRING',
+              encrypted_value: encryptedToken,
+              key_id: keyId,
+            });
+
+            const message = Buffer.from(process.env.API_NAME);
+            const cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
+            sodium.crypto_box_seal(cipherText, message, key);
+            const encryptedToken = cipherText.toString('base64')
+            await github.rest.actions.createOrUpdateRepoSecret({
+              ...context.repo,
+              secret_name: 'API_NAME',
+              encrypted_value: encryptedToken,
+              key_id: keyId,
+            });
+
+            const message = Buffer.from(process.env.STUDENTPORTAL_NAME);
+            const cipherText = Buffer.alloc(message.length + sodium.crypto_box_SEALBYTES);
+            sodium.crypto_box_seal(cipherText, message, key);
+            const encryptedToken = cipherText.toString('base64')
+            await github.rest.actions.createOrUpdateRepoSecret({
+              ...context.repo,
+              secret_name: 'STUDENTPORTAL_NAME',
+              encrypted_value: encryptedToken,
+              key_id: keyId,
+            });
+          } else {
+            core.error('Failed to fetch the public key, Unable to update secret')
+          }
