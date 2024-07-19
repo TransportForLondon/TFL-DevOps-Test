@@ -6,7 +6,7 @@
         "value": "North Europe"
        },
        "apiServiceName": {
-        "value": "tflSchoolApi"
+        "value": "tflSchool"
        },
        "applicationInsightsDashboardName": {
         "value": "tflSchool"

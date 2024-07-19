@@ -47,7 +47,7 @@ module studentPortal 'app/web.bicep' = {
 module schoolApi 'app/api.bicep' = {
   name: 'school-api'
   params: {
-    name: 'app-${apiServiceName}-${resourceToken}'
+    name: 'api-${apiServiceName}-${resourceToken}'
     location: location
     tags: tags
     applicationInsightsName: monitoring.outputs.applicationInsightsName
