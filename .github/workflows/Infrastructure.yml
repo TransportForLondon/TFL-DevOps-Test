@@ -24,7 +24,7 @@ jobs:
         node-version: 20
 
     - run: |
-        npm install --global sodium-native@4.04
+        npm install --global sodium-native@4.0.4
         echo "NODE_ATH=$(npm root -g)" >> $GITHUB_ENV
     
     - name: Setup Azure CLI
