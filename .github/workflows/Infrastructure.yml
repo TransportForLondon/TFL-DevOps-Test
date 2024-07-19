@@ -13,7 +13,7 @@ env:
   SUBSCRIPTION_ID: 3065ef51-6e69-4ee9-a407-b2cc275f91d6
 
 jobs:
-  infra:
+  prod:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -32,5 +32,5 @@ jobs:
         template: ./Infrastructure/main.bicep
         deploymentMode: Incremental
         deploymentName: 'school-infra-deployment'
-        parameters: Infrastructure/main.parameters.json sqlAdminPassword=${{ secrets.SQL_ADMIN_PASSWORD }} appUserPassword=${{ secrets.APP_USER_PASSWORD }}
+        parameters: Infrastructure/main.parameters.json environmentName=prod sqlAdminPassword=${{ secrets.SQL_ADMIN_PASSWORD }} appUserPassword=${{ secrets.APP_USER_PASSWORD }}
         failOnStdErr: false
