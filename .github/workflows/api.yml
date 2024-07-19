@@ -55,7 +55,7 @@ jobs:
         run: dotnet tool install --global dotnet-ef
 
       - name: create migration script
-        run: dotnet ef migrations script --output migrationScript\migration.sql --idempotent
+        run: dotnet ef migrations script --project Api/Api.csproj --output migrationScript\migration.sql --idempotent
 
       - name: Upload Migration Script
         uses: actions/upload-artifact@v2
