@@ -15,9 +15,9 @@ if(builder.Environment.IsDevelopment())
 }
 else
 {
-    var connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+    var connection = builder.Configuration.GetConnectionString("TflSchoolApiContext");
     builder.Services.AddDbContext<TflDbContext>(opt =>
-        opt.UseSqlServer(connection)
+        opt.UseSqlServer(connection, sqlOptions => sqlOptions.EnableRetryOnFailure())
     );
 }
 
@@ -28,11 +28,9 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

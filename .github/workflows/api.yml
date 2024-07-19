@@ -9,13 +9,12 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: 8
-  DOTNET_ROOT: .
-  AZURE_WEBAPP_NAME: TflSchoolApi
+  CONFIGURATION: release
+  DOTNET_VERSION: '8.x'
 
 jobs:
-  Build:
-    runs-on: windows-latest
+  build:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -23,59 +22,50 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Restore
+        run: dotnet restore Api/Api.csproj
 
-      - name: Set up dependency cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+      - name: Build
+        run: dotnet build Api/Api.csproj --configuration ${{ env.CONFIGURATION }} --no-restore
 
-      - name: Replace Config Tokens
-        uses: cschleiden/replace-tokens@v1
-        with:
-          files: '["Api/appsettings.json"]'
-        env:
-          SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
-
-      - name: Build api
-        run: dotnet build ./Api/Api.csproj --configuration Release
+      - name: Test
+        run: dotnet test Api.Tests/Api.Tests.csproj --verbosity normal --logger trx --results-directory TestResults
 
       - name: Publish Api
-        run: dotnet publish ./Api/Api.csproj --configuration Release --output ./Publish/Api
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi Api/Api.csproj
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Api
+        uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.AZURE_WEBAPP_NAME }}
-          path: ./Publish/Api
+          name: api
+          path: PublishApi
 
-  Deploy:
-    runs-on: windows-latest
-    needs: Build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  release:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Download Artifact
-        id: download-artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v2
         with:
-          name: ${{ env.AZURE_WEBAPP_NAME }}
+          name: api
+          path: api-artifact
 
+      - name: Variable Substitution API
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: api-artifact/appsettings.json
+        env:
+          ConnectionStrings.TflSchoolApiContext: '${{ secrets.DATABASE_CONN_STRING }}password=${{ secrets.SQL_ADMIN_PASSWORD }}'
+          ApplicationInsights.ConnectionString: ${{ secrets.APP_INSIGHTS_CONN_STRING }}
 
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+      - name: Deploy API
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ steps.download-artifact.outputs.download-path }}
-
-      - name: Azure Logout
-        run: az logout
+          app-name: ${{ secrets.API_NAME }}
+          package: api-artifact
