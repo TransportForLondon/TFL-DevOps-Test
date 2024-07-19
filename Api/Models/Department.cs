@@ -2,7 +2,7 @@ namespace TFL.DevOps.Api.Models;
 
 public class Department
 {
-    public long DepartmentID {get;set;}
+    public int DepartmentID {get;set;}
     public string? Name {get;set;}
     public decimal Budget {get;set;}
     public DateTime StartDate {get;set;}

@@ -9,8 +9,7 @@ namespace TFL.DevOps.Api.Data;
 
 public class TflDbContext : DbContext
 {
-    public TflDbContext (DbContextOptions<TflDbContext> options)
-        : base(options)
+    public TflDbContext (DbContextOptions<TflDbContext> options) : base(options)
     {
     }
 
@@ -31,7 +30,15 @@ public class TflDbContext : DbContext
             .WithOne(a => a.OfficeAssignment)
             .HasForeignKey<Instructor>(i => i.Id);
 
-        modelBuilder.Entity<CourseAssignment>()
+        modelBuilder.Entity<CourseAssignment>().ToTable(nameof(CourseAssignment))
+            .HasOne(ca => ca.Course)
+            .WithMany(c => c.CourseAssignments);
+
+        modelBuilder.Entity<CourseAssignment>().ToTable(nameof(CourseAssignment))
+            .HasOne(ca => ca.Instructor)
+            .WithMany(i => i.CourseAssignments);
+
+        modelBuilder.Entity<CourseAssignment>().ToTable(nameof(CourseAssignment))
             .HasKey(c => new { c.CourseID, c.InstructorID });
     }
 }

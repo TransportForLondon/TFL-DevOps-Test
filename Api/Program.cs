@@ -7,19 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-if(builder.Environment.IsDevelopment())
-{
-    builder.Services.AddDbContext<TflDbContext>(opt =>
-        opt.UseInMemoryDatabase("TFL")
-    );
-}
-else
-{
-    var connection = builder.Configuration.GetConnectionString("TflSchoolApiContext");
-    builder.Services.AddDbContext<TflDbContext>(opt =>
-        opt.UseSqlServer(connection, sqlOptions => sqlOptions.EnableRetryOnFailure())
-    );
-}
+var connection = builder.Configuration.GetConnectionString("TflSchoolApiContext");
+builder.Services.AddDbContext<TflDbContext>(opt =>
+    opt.UseSqlServer(connection, sqlOptions => sqlOptions.EnableRetryOnFailure())
+);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
