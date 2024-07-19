@@ -1,6 +1,11 @@
 name: Deploy Infrastructure
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Infrastrcuture/**'
   workflow_dispatch:
 
 env:
@@ -8,8 +13,8 @@ env:
   SUBSCRIPTION_ID: 3065ef51-6e69-4ee9-a407-b2cc275f91d6
 
 jobs:
-  deploy:
-    runs-on: windows-latest
+  infra:
+    runs-on: ubun-latest
     steps:
     - uses: actions/checkout@v4
     
@@ -21,17 +26,11 @@ jobs:
     - name: Deploy Database
       uses: azure/arm-deploy@v1
       with:
+        scope: resourceGroup
         subscriptionId: ${{ env.SUBSCRIPTION_ID }}
         resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
-        template: ./Infrastructure/database.bicep
-        parameters: Infrastructure/database.parameters.json adminPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
-        failOnStdErr: false
-
-    - name: Deploy API
-      uses: azure/arm-deploy@v1
-      with:
-        subscriptionId: ${{ env.SUBSCRIPTION_ID }}
-        resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
-        template: ./Infrastructure/api.bicep
-        parameters: Infrastructure/api.parameters.json
+        template: ./Infrastructure/main.bicep
+        deploymentMode: Incremental
+        deploymentName: 'school-infra-deployment'
+        parameters: Infrastructure/main.parameters.json sqlAdminPassword=${{ secrets.SQL_ADMIN_PASSWORD }} appUserPassword=${{ secrets.APP_USER_PASSWORD }}
         failOnStdErr: false

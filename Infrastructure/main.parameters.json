@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentparameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+       "location": {
+        "value": "North Europe"
+       },
+       "apiServiceName": {
+        "value": "tflSchoolApi"
+       },
+       "applicationInsightsDashboardName": {
+        "value": "tflSchool"
+       },
+       "applicatonInsightsName": {
+        "value": "tflSchool"
+       },
+       "appServicePlanName": {
+        "value": "tflSchool"
+       },
+       "keyVaultName": {
+        "value": "tflSchool"
+       },
+       "sqlServerName": {
+        "value": "tflSchool"
+       },
+       "sqlDatabaseName": {
+        "value": "tflSchool"
+       },
+       "studentPortalServiceName": {
+        "value": "studentPortal"
+       }
+    }
+}
