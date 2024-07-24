@@ -15,10 +15,12 @@ namespace Api.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly TflDbContext _context;
+        private readonly ILogger<StudentsController> _logger;
 
-        public StudentsController(TflDbContext context)
+        public StudentsController(TflDbContext context, ILogger<StudentsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Students
@@ -37,7 +39,8 @@ namespace Api.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(500,ex.Message);
+                _logger.LogError(ex,"GetStudents has failed");
+                return StatusCode(500);
             }
         }
 
@@ -54,12 +57,13 @@ namespace Api.Controllers
                     return NotFound();
                 }
                 
-                student.Enrollments =  await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
+                student.Enrollments = await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
                 return student;
             }
             catch(Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                _logger.LogError(ex,"GetStudents has failed");
+                return StatusCode(500);
             }
         }
 
