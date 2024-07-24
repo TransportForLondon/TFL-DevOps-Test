@@ -25,7 +25,13 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            return await _context.Students.ToListAsync();
+            var students = await _context.Students.ToListAsync();
+            foreach(var student in students)
+            {
+                student.Enrollments = await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
+            }
+
+            return students;
         }
 
         // GET: api/Students/5
@@ -40,7 +46,8 @@ namespace Api.Controllers
                 {
                     return NotFound();
                 }
-
+                
+                student.Enrollments =  await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
                 return student;
             }
             catch(Exception ex)
