@@ -30,7 +30,7 @@ namespace Api.Controllers
 
         // GET: api/Students/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(long id)
+        public async Task<ActionResult<Student>> GetStudent(int id)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace Api.Controllers
         // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent(long id, Student student)
+        public async Task<IActionResult> PutStudent(int id, Student student)
         {
             if (id != student.Id)
             {
@@ -93,7 +93,7 @@ namespace Api.Controllers
 
         // DELETE: api/Students/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(long id)
+        public async Task<IActionResult> DeleteStudent(int id)
         {
             var student = await _context.Students.FindAsync(id);
             if (student == null)
@@ -107,7 +107,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        private bool StudentExists(long id)
+        private bool StudentExists(int id)
         {
             return _context.Students.Any(e => e.Id == id);
         }

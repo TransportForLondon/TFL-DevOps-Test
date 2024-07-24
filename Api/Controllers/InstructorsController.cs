@@ -30,7 +30,7 @@ namespace Api.Controllers
 
         // GET: api/Instructors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Instructor>> GetInstructor(long id)
+        public async Task<ActionResult<Instructor>> GetInstructor(int id)
         {
             var instructor = await _context.Instructors.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Api.Controllers
         // PUT: api/Instructors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInstructor(long id, Instructor instructor)
+        public async Task<IActionResult> PutInstructor(int id, Instructor instructor)
         {
             if (id != instructor.Id)
             {
@@ -100,7 +100,7 @@ namespace Api.Controllers
 
         // DELETE: api/Instructors/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInstructor(long id)
+        public async Task<IActionResult> DeleteInstructor(int id)
         {
             var instructor = await _context.Instructors.FindAsync(id);
             if (instructor == null)
@@ -114,7 +114,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        private bool InstructorExists(long id)
+        private bool InstructorExists(int id)
         {
             return _context.Instructors.Any(e => e.Id == id);
         }

@@ -30,7 +30,7 @@ namespace Api.Controllers
 
         // GET: api/Departments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Department>> GetDepartment(long id)
+        public async Task<ActionResult<Department>> GetDepartment(int id)
         {
             var department = await _context.Departments.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Api.Controllers
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDepartment(long id, Department department)
+        public async Task<IActionResult> PutDepartment(int id, Department department)
         {
             if (id != department.DepartmentID)
             {
@@ -86,7 +86,7 @@ namespace Api.Controllers
 
         // DELETE: api/Departments/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDepartment(long id)
+        public async Task<IActionResult> DeleteDepartment(int id)
         {
             var department = await _context.Departments.FindAsync(id);
             if (department == null)
@@ -100,7 +100,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        private bool DepartmentExists(long id)
+        private bool DepartmentExists(int id)
         {
             return _context.Departments.Any(e => e.DepartmentID == id);
         }

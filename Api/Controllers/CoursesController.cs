@@ -38,7 +38,7 @@ namespace Api.Controllers
 
         // GET: api/Courses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Course>> GetCourse(long id)
+        public async Task<ActionResult<Course>> GetCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
 
@@ -53,7 +53,7 @@ namespace Api.Controllers
         // PUT: api/Courses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(long id, Course course)
+        public async Task<IActionResult> PutCourse(int id, Course course)
         {
             if (id != course.CourseId)
             {
@@ -94,7 +94,7 @@ namespace Api.Controllers
 
         // DELETE: api/Courses/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse(long id)
+        public async Task<IActionResult> DeleteCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
             if (course == null)
@@ -108,7 +108,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        private bool CourseExists(long id)
+        private bool CourseExists(int id)
         {
             return _context.Courses.Any(e => e.CourseId == id);
         }
