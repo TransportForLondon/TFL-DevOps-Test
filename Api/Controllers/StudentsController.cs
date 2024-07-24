@@ -32,14 +32,21 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Student>> GetStudent(long id)
         {
-            var student = await _context.Students.FindAsync(id);
-
-            if (student == null)
+            try
             {
-                return NotFound();
-            }
+                var student = await _context.Students.FindAsync(id);
 
-            return student;
+                if (student == null)
+                {
+                    return NotFound();
+                }
+
+                return student;
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // PUT: api/Students/5
