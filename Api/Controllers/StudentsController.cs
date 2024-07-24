@@ -25,13 +25,20 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            var students = await _context.Students.ToListAsync();
-            foreach(var student in students)
+            try
             {
-                student.Enrollments = await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
-            }
+                var students = await _context.Students.ToListAsync();
+                foreach(var student in students)
+                {
+                    student.Enrollments = await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
+                }
 
-            return students;
+                return students;
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500,ex.Message);
+            }
         }
 
         // GET: api/Students/5
