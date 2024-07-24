@@ -11,18 +11,6 @@ namespace Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "OfficeAssignments",
-                columns: table => new
-                {
-                    InstructorID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OfficeAssignments", x => x.InstructorID);
-                });
 
             migrationBuilder.CreateTable(
                 name: "Students",
@@ -43,7 +31,8 @@ namespace Api.Migrations
                 name: "Instructors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FirstMidName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HireDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -51,12 +40,23 @@ namespace Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Instructors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OfficeAssignments",
+                columns: table => new
+                {
+                    InstructorID = table.Column<int>(type: "int", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OfficeAssignments", x => x.InstructorID);
                     table.ForeignKey(
-                        name: "FK_Instructors_OfficeAssignments_Id",
-                        column: x => x.Id,
-                        principalTable: "OfficeAssignments",
-                        principalColumn: "InstructorID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_OfficeAssignments_Instructors_InstructorID",
+                        column: x => x.InstructorID,
+                        principalTable: "Instructors",
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
