@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TFL.DevOps.Api.Data;
-using TFL.DevOps.Api.Models;
+using TFL.DevOps.Models;
 
-namespace Api.Controllers
+namespace TFL.DevOps.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

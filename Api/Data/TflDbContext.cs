@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TFL.DevOps.Api.Models;
+using TFL.DevOps.Models;
 
 namespace TFL.DevOps.Api.Data;
 
