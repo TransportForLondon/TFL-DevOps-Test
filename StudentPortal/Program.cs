@@ -3,6 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddApplicationInsightsTelemetry();
+
 builder.Services.AddHttpClient("school.api", http =>
 {
     http.BaseAddress = new Uri(builder.Configuration["SchoolApi:BaseUri"]);

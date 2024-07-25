@@ -61,6 +61,7 @@ jobs:
           files: studentPortal-artifact/appsettings.json
         env:
           SchoolApi.BaseUri: "https://${{ vars.API_NAME }}.azurewebsites.net"
+          ApplicationInsights.ConnectionString: ${{ vars.APP_INSIGHTS_CONN_STRING }}
 
       - name: Azure Login
         uses: azure/login@v1
