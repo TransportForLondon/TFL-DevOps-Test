@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
-using StudentPortal.Model;
+using TFL.DevOps.Models;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
-namespace StudentPortal.Pages;
+namespace TFL.DevOps.StudentPortal.Pages;
 
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    //public Student StudentData { get; set; }
 
     public IndexModel(ILogger<IndexModel> logger, IHttpClientFactory httpClientFactory)
     {
@@ -21,29 +25,35 @@ public class IndexModel : PageModel
 
     }
 
-    [HttpGet]
-    [ActionName("GetStudentRecord")]
-    public async Task<IActionResult> GetStudentRecord(Student Student)
+    public async Task<IActionResult> OnGetStudentAsync(string firstmidname, string lastname)
     {
-        if(ModelState.IsValid && Student != null)
+        if(ModelState.IsValid)
         {
             var client = _httpClientFactory.CreateClient("school.api");
+            var response = await client.GetStringAsync("api/Students");
 
-            using HttpResponseMessage response = await client.GetAsync("api/Students");
+            var studentsArray = JsonNode.Parse(response).AsArray();
+
+            var studentId = 0;
+            foreach(var studentNode in studentsArray)
+            {
+                if(studentNode!["firstMidName"].ToString() == firstmidname && studentNode!["lastName"].ToString() == lastname)
+                {
+                    int.TryParse(studentNode!["id"].ToString(), out studentId);
+                    break;
+                }
+            }
             
-            if(response.IsSuccessStatusCode)
-            {
-                var content = response.Content;
-                 
-            }
-            else
-            {
-                //TODO: Throw Error
-            }
+            if(studentId == 0)
+                return NotFound();
+            
+            var student = await client.GetFromJsonAsync<Student>($"api/Students/{studentId}");
+
+            return Partial("~/Pages/Shared/_StudentDataPartial.cshtml", student);
         }
         else
         {
-             
+             throw new Exception("Model state not valid");
         }
     }
 }

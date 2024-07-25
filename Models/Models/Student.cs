@@ -8,4 +8,18 @@ public class Student
     public DateTime? EnrollmentDate { get; set; }
 
     public ICollection<Enrollment> Enrollments { get; set; }
+
+    public int TotalCredits
+    {
+        get
+        {
+            var totalCredits = 0;
+            foreach(var enrollment in Enrollments)
+            {
+                totalCredits = (int)enrollment.Course.Credits;
+            }
+
+            return totalCredits;
+        }
+    }
 }
