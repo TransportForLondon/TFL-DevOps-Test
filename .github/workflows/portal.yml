@@ -25,7 +25,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       
       - name: Restore
-        run: dotnet restore Api/Api.csproj
+        run: dotnet restore StudentPortal/StudentPortal.csproj
 
       - name: Build
         run: dotnet build StudentPortal/StudentPortal.csproj --configuration ${{ env.CONFIGURATION }} --no-restore
