@@ -14,7 +14,14 @@ builder.Services
         opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
     );
 
-var connection = builder.Configuration.GetConnectionString("TflSchoolApiContext");
+//Server=tcp:sql-tfls-d4a635oijzpbc.database.windows.net,1433;Initial Catalog=sqldb-tfls-d4a635oijzpbc;Persist Security Info=False;User ID=sqlAdmin;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+var dbName = builder.Configuration["DatabaseConnection:DatabaseName"];
+var userName = builder.Configuration["DatabaseConnection:UserName"];
+var password = builder.Configuration["DatabaseConnection:Password"];
+
+var connection = $"Server=tcp:sql-tfls-d4a635oijzpbc.database.windows.net,1433;Initial Catalog={dbName};Persist Security Info=False;User ID={userName};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
 builder.Services.AddDbContext<TflDbContext>(opt =>
     opt.UseSqlServer(connection, sqlOptions => sqlOptions.EnableRetryOnFailure())
 );
