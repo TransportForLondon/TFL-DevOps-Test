@@ -29,13 +29,11 @@ namespace Api.Controllers
         {
             try
             {
-                var students = await _context.Students.ToListAsync();
-                foreach(var student in students)
-                {
-                    student.Enrollments = await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
-                }
-
-                return students;
+                return await _context.Students
+                    .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Course)
+                    .AsNoTracking()
+                    .ToListAsync();
             }
             catch(Exception ex)
             {
@@ -50,19 +48,21 @@ namespace Api.Controllers
         {
             try
             {
-                var student = await _context.Students.FindAsync(id);
+                var student = await _context.Students
+                                .Include(s => s.Enrollments)
+                                .ThenInclude(e => e.Course)
+                                .FirstAsync(s => s.Id == id);
 
                 if (student == null)
                 {
                     return NotFound();
                 }
                 
-                student.Enrollments = await _context.Enrollments.Where(e => e.StudentID == student.Id).ToListAsync();
                 return student;
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex,"GetStudents has failed");
+                _logger.LogError(ex,"GetStudent has failed");
                 return StatusCode(500);
             }
         }

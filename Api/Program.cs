@@ -1,13 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using TFL.DevOps.Api.Data;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry();
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(
+        opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+    );
 
 var connection = builder.Configuration.GetConnectionString("TflSchoolApiContext");
 builder.Services.AddDbContext<TflDbContext>(opt =>
