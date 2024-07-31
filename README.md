@@ -29,48 +29,48 @@ Below is a Entity Relationship diagram for the database
 erDiagram
   STUDENT }|--|| ENROLLMENT : Enrolls
   STUDENT {
-    int Id
+    int Id PK
     string FirstMidName
     string LastName
     DateTime EnrollmentDate
   }
   ENROLLMENT ||--|{ COURSE : EnrolledOn
   ENROLLMENT {
-    int EnrollmentId
-    int CourseId
-    int StudentId
+    int EnrollmentId PK
+    int CourseId FK
+    int StudentId FK
     int Grade
   }
   COURSE ||--|{ DEPARTMENT : InDepartment
   COURSE }|--|| COURSEASSIGNMENT : Assignment
   COURSE {
-    int CourseId
+    int CourseId PK
     string Title
     int Credits
-    int DepartmentId
+    int DepartmentId FK
   }
   DEPARTMENT ||--o| INSTRUCTOR : ManagedBy
   DEPARTMENT {
-    int DepartmentId
+    int DepartmentId PK
     string Name
     decimal Budget
     DateTime StartDate
-    int InstructorId
+    int InstructorId FK
   }
   COURSEASSIGNMENT ||--|{ INSTRUCTOR : Teaches
   COURSEASSIGNMENT {
-    int InstructorId
-    int CourseId
+    int InstructorId PK, FK
+    int CourseId PK, FK
   }
   INSTRUCTOR |o--|| OFFICEASSIGNMENT : Located
   INSTRUCTOR {
-    int Id
+    int Id PK
     string FirstMidName
     string LastName
     DateTime HireDate
   }
   OFFICEASSIGNMENT {
-    int InstructorId
+    int InstructorId PK, FK
     string Location
   }
   
